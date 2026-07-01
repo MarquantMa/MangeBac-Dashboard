@@ -1,0 +1,967 @@
+<!-- 
+  ========================================================================
+  ManageTask Dashboard - Interactive Student Portal
+  ========================================================================
+  Designed, Developed, and Invented by: Marquant Ma (Haoran Ma)
+  Author Email: HaoranMa0818@icloud.com
+  Copyright (c) 2026 Marquant Ma. All rights reserved.
+  
+  This software is proprietary intellectual property. Unauthorized copying,
+  redistribution, or modifications of this project's code, structure,
+  or assets is strictly prohibited under copyright law.
+  ========================================================================
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ManageBac Student Tasks Dashboard</title>
+  <!-- SEO & UI Settings -->
+  <meta name="description" content="ManageBac student task manager and visual planner. Group tasks by subject, date, grades, and calendar view.">
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css?v=2.0.2">
+</head>
+<body class="dark-theme">
+
+  <!-- Main Container -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="app-logo">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          <span class="logo-text">Manage<span>Task</span></span>
+        </div>
+      </div>
+      
+      <nav class="nav-menu">
+        <button class="nav-item active" data-tab="dashboard" id="nav-dashboard">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="9" rx="1" />
+            <rect x="14" y="3" width="7" height="5" rx="1" />
+            <rect x="14" y="12" width="7" height="9" rx="1" />
+            <rect x="3" y="16" width="7" height="5" rx="1" />
+          </svg>
+          Dashboard
+        </button>
+        <button class="nav-item" data-tab="calendar" id="nav-calendar">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          Calendar
+        </button>
+        <button class="nav-item" data-tab="analytics" id="nav-analytics">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10" />
+            <line x1="12" y1="20" x2="12" y2="4" />
+            <line x1="6" y1="20" x2="6" y2="14" />
+          </svg>
+          Analytics
+        </button>
+        <button class="nav-item" data-tab="cas" id="nav-cas">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
+          CAS Journal
+        </button>
+        <button class="nav-item nav-logout-item" id="nav-logout" style="margin-top: auto;">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+          Logout
+        </button>
+      </nav>
+
+      <!-- Sync Status Widget (Sidebar Footer) -->
+      <div class="sync-panel">
+        <div class="sync-info">
+          <span class="sync-title">ManageBac Sync</span>
+          <span class="sync-time" id="last-sync-time">Last: Checking...</span>
+        </div>
+        <div class="sync-status-details">
+          <div class="sync-progress-bar">
+            <div class="sync-progress-fill" id="sync-progress-fill" style="width: 0%"></div>
+          </div>
+          <span class="sync-msg" id="sync-message">Status: Idle</span>
+        </div>
+        <button class="sync-btn" id="sync-btn">
+          <svg class="sync-icon" id="sync-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+          </svg>
+          <span>Sync Now</span>
+        </button>
+      </div>
+
+      <!-- Developer Attribution Signature -->
+      <div class="sidebar-signature">
+        <p class="sig-title">ManageTask v2.0.2</p>
+        <p class="sig-author">Designed & Invented by</p>
+        <p class="sig-name">Marquant Ma</p>
+        <p class="sig-copy">&copy; 2026. All Rights Reserved.</p>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Bar Header -->
+      <header class="main-header">
+        <div class="header-left">
+          <h1 id="page-title">Dashboard Overview</h1>
+          <p class="subtitle" id="page-subtitle">Welcome back! Manage and plan your upcoming tasks.</p>
+        </div>
+        <div class="header-right">
+          <!-- Theme Toggle Button -->
+          <button class="theme-toggle-btn" id="theme-toggle" title="Switch to Light/Dark Mode">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <!-- Profile Badge -->
+          <div class="profile-badge">
+            <div class="avatar">ST</div>
+            <div class="profile-info">
+              <span class="profile-name">Student Name</span>
+              <span class="profile-email">student@school.edu</span>
+              <span class="profile-trial" id="profile-trial-status" style="font-size: 10px; font-weight: 600; color: var(--accent-purple); margin-top: 2px; display: block;"></span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Content Views (Tabs) -->
+      <div class="content-body">
+        
+        <!-- Tab 1: Dashboard View -->
+        <section class="tab-content active" id="tab-dashboard">
+          
+          <!-- Key Metrics Grid -->
+          <div class="metrics-grid">
+            <div class="metric-card overdue" id="metric-overdue-card">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                  <line x1="12" y1="9" x2="12" y2="13"/>
+                  <line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <span class="metric-label">Overdue Tasks</span>
+                <h2 class="metric-value" id="stat-overdue">-</h2>
+              </div>
+            </div>
+            
+            <div class="metric-card upcoming" id="metric-upcoming-card">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <span class="metric-label">Upcoming Tasks</span>
+                <h2 class="metric-value" id="stat-upcoming">-</h2>
+              </div>
+            </div>
+            
+            <div class="metric-card GPA" id="metric-gpa-card">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                  <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <span class="metric-label">Average Score</span>
+                <h2 class="metric-value" id="stat-average-grade">-</h2>
+              </div>
+            </div>
+
+            <div class="metric-card completed" id="metric-completed-card">
+              <div class="metric-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+              <div class="metric-data">
+                <span class="metric-label">Graded Tasks</span>
+                <h2 class="metric-value" id="stat-completed">-</h2>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls Panel (Filters and Sorting) -->
+          <div class="controls-panel">
+            <div class="search-box">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="search-input" placeholder="Search tasks by title...">
+            </div>
+
+            <div class="filters-group">
+              <div class="filter-select-wrapper">
+                <select id="filter-subject">
+                  <option value="all">All Subjects</option>
+                  <!-- Populated by JS -->
+                </select>
+              </div>
+              
+              <div class="filter-select-wrapper">
+                <select id="filter-status">
+                  <option value="all">All Statuses</option>
+                  <option value="upcoming">Upcoming</option>
+                  <option value="overdue">Overdue</option>
+                  <option value="assessed">Graded / Assessed</option>
+                  <option value="not_assessed">Pending Assessment</option>
+                  <option value="pending">Submit Coursework (Due)</option>
+                </select>
+              </div>
+
+              <!-- Grouping Toggle -->
+              <div class="toggle-group-wrapper">
+                <span class="toggle-label">Group By:</span>
+                <div class="btn-toggle-group">
+                  <button class="btn-toggle active" data-group="deadline" id="btn-group-deadline">Deadline</button>
+                  <button class="btn-toggle" data-group="subject" id="btn-group-subject">Subject</button>
+                </div>
+              </div>
+
+              <!-- Due Radar Toggle Switch -->
+              <div class="radar-toggle-wrapper" style="margin-left: 16px; display: flex; align-items: center; gap: 8px;">
+                <label class="switch" style="position: relative; display: inline-block; width: 34px; height: 20px;">
+                  <input type="checkbox" id="dashboard-radar-toggle" checked style="opacity: 0; width: 0; height: 0;">
+                  <span class="slider round" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 20px;"></span>
+                </label>
+                <span style="font-size: 0.75rem; color: var(--text-secondary); user-select: none;">Due Radar</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tasks Display Board -->
+          <div class="tasks-board-container" id="tasks-board">
+            <!-- Grouped Task Rows generated dynamically -->
+            <div class="loading-state">
+              <div class="spinner"></div>
+              <p>Loading your tasks...</p>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Tab 2: Calendar View -->
+        <section class="tab-content" id="tab-calendar">
+          <div class="calendar-wrapper">
+            
+            <!-- Apple Calendar Top Toolbar -->
+            <div class="calendar-toolbar">
+              <div class="toolbar-left">
+                <div class="mac-buttons">
+                  <span class="mac-btn close"></span>
+                  <span class="mac-btn minimize"></span>
+                  <span class="mac-btn zoom"></span>
+                </div>
+                <div class="toolbar-actions">
+                  <button class="tool-btn icon-btn" id="cal-add-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  </button>
+                  <div class="cal-nav-buttons">
+                    <button class="tool-btn" id="cal-prev-btn">&lt;</button>
+                    <button class="tool-btn" id="cal-today-btn">Today</button>
+                    <button class="tool-btn" id="cal-next-btn">&gt;</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="toolbar-center">
+                <div class="view-selector-group">
+                  <button class="view-toggle-btn" data-view="day" id="toggle-day">Day</button>
+                  <button class="view-toggle-btn active" data-view="week" id="toggle-week">Week</button>
+                  <button class="view-toggle-btn" data-view="month" id="toggle-month">Month</button>
+                  <button class="view-toggle-btn" data-view="year" id="toggle-year">Year</button>
+                </div>
+              </div>
+              
+              <div class="toolbar-right">
+                <h2 id="calendar-month-year">June 2026</h2>
+                <div class="search-icon-wrapper">
+                  <svg class="search-icon-small" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- WEEK VIEW CONTAINER -->
+            <div class="calendar-week-container active" id="calendar-week-view">
+              <!-- Days header row -->
+              <div class="week-header-row" id="week-days-headers">
+                <div class="time-header-cell"></div>
+                <!-- Injected dynamically by JS -->
+                <div class="day-header-cell">Sun 14</div>
+                <div class="day-header-cell">Mon 15</div>
+                <div class="day-header-cell">Tue 16</div>
+                <div class="day-header-cell">Wed 17</div>
+                <div class="day-header-cell">Thu 18</div>
+                <div class="day-header-cell">Fri 19</div>
+                <div class="day-header-cell">Sat 20</div>
+              </div>
+
+              <!-- All day events bar -->
+              <div class="all-day-bar-row">
+                <div class="all-day-label">all-day</div>
+                <div class="all-day-cells-container" id="week-all-day-container">
+                  <!-- Injected by JS: 7 cells for events -->
+                </div>
+              </div>
+
+              <!-- Hourly Grid (Scrollable) -->
+              <div class="week-hourly-scroll" id="week-hourly-scroll">
+                <div class="week-hourly-grid">
+                  <!-- Left time column labels -->
+                  <div class="time-labels-col" id="time-labels-col">
+                    <!-- Injected by JS: 12 AM to 11 PM -->
+                  </div>
+
+                  <!-- 7 Day Columns containing events and grid lines -->
+                  <div class="columns-grid-wrapper">
+                    <!-- Grid background lines -->
+                    <div class="hour-grid-lines" id="hour-grid-lines">
+                      <!-- Injected dynamically -->
+                    </div>
+
+                    <!-- Columns content -->
+                    <div class="week-columns-container" id="week-columns-container">
+                      <!-- 7 Columns injected dynamically -->
+                    </div>
+
+                    <!-- Red current time marker -->
+                    <div class="current-time-marker" id="current-time-marker">
+                      <div class="marker-bubble" id="marker-bubble">6:43</div>
+                      <div class="marker-line"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MONTH VIEW CONTAINER (Hidden by default) -->
+            <div class="calendar-grid-container" id="calendar-month-view">
+              <div class="calendar-weekdays">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+              </div>
+              <div class="calendar-days" id="calendar-days-grid">
+                <!-- Days injected by JS -->
+              </div>
+            </div>
+            
+          </div>
+        </section>
+
+        <!-- Tab 3: Analytics View -->
+        <section class="tab-content" id="tab-analytics">
+          <div class="analytics-layout">
+            
+            <div class="analytics-card double-width">
+              <h3>Score Trend & Grades</h3>
+              <p class="card-desc">Your task scores categorized by academic performance (Out of 7 scale).</p>
+              
+              <div class="score-breakdown">
+                <div class="score-column">
+                  <div class="grade-bar-wrapper">
+                    <div class="grade-level">Grade 7</div>
+                    <div class="grade-track"><div class="grade-fill" id="grade-bar-7" style="height: 0%"></div></div>
+                    <div class="grade-count" id="grade-val-7">0</div>
+                  </div>
+                </div>
+                <div class="score-column">
+                  <div class="grade-bar-wrapper">
+                    <div class="grade-level">Grade 6</div>
+                    <div class="grade-track"><div class="grade-fill" id="grade-bar-6" style="height: 0%"></div></div>
+                    <div class="grade-count" id="grade-val-6">0</div>
+                  </div>
+                </div>
+                <div class="score-column">
+                  <div class="grade-bar-wrapper">
+                    <div class="grade-level">Grade 5</div>
+                    <div class="grade-track"><div class="grade-fill" id="grade-bar-5" style="height: 0%"></div></div>
+                    <div class="grade-count" id="grade-val-5">0</div>
+                  </div>
+                </div>
+                <div class="score-column">
+                  <div class="grade-bar-wrapper">
+                    <div class="grade-level">Grade 4</div>
+                    <div class="grade-track"><div class="grade-fill" id="grade-bar-4" style="height: 0%"></div></div>
+                    <div class="grade-count" id="grade-val-4">0</div>
+                  </div>
+                </div>
+                <div class="score-column">
+                  <div class="grade-bar-wrapper">
+                    <div class="grade-level">Grade 3</div>
+                    <div class="grade-track"><div class="grade-fill" id="grade-bar-3" style="height: 0%"></div></div>
+                    <div class="grade-count" id="grade-val-3">0</div>
+                  </div>
+                </div>
+                <div class="score-column">
+                  <div class="grade-bar-wrapper">
+                    <div class="grade-level">Grade 2</div>
+                    <div class="grade-track"><div class="grade-fill" id="grade-bar-2" style="height: 0%"></div></div>
+                    <div class="grade-count" id="grade-val-2">0</div>
+                  </div>
+                </div>
+                <div class="score-column">
+                  <div class="grade-bar-wrapper">
+                    <div class="grade-level">Grade 1</div>
+                    <div class="grade-track"><div class="grade-fill" id="grade-bar-1" style="height: 0%"></div></div>
+                    <div class="grade-count" id="grade-val-1">0</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="analytics-card">
+              <h3>Type Distribution</h3>
+              <p class="card-desc">Proportion of Formative vs Summative tasks.</p>
+              
+              <div class="chart-donut-wrapper">
+                <div class="donut-chart" id="assessment-donut" style="--formative-percent: 50%;">
+                  <div class="donut-hole">
+                    <span id="donut-total">0</span>
+                    <span class="label">Total Tasks</span>
+                  </div>
+                </div>
+                <div class="chart-legend">
+                  <div class="legend-row">
+                    <span class="bullet formative"></span>
+                    <span>Formative</span>
+                    <span class="val" id="count-formative">0</span>
+                  </div>
+                  <div class="legend-row">
+                    <span class="bullet summative"></span>
+                    <span>Summative</span>
+                    <span class="val" id="count-summative">0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="analytics-card double-width">
+              <h3>Top Subjects by Volume</h3>
+              <p class="card-desc">Amount of assignments assigned per subject.</p>
+              <div class="subject-bars-list" id="subject-volume-list">
+                <!-- Dynamic HTML bars -->
+              </div>
+            </div>
+
+            <div class="analytics-card">
+              <h3>Status Overview</h3>
+              <p class="card-desc">Completeness of tasks recorded.</p>
+              
+              <div class="completion-stats">
+                <div class="stat-progress-row">
+                  <div class="label-info">
+                    <span>Graded Tasks</span>
+                    <span id="pct-graded">0%</span>
+                  </div>
+                  <div class="progress-bar"><div class="progress-fill graded" id="fill-pct-graded" style="width: 0%"></div></div>
+                </div>
+                <div class="stat-progress-row">
+                  <div class="label-info">
+                    <span>Pending Assessment</span>
+                    <span id="pct-pending">0%</span>
+                  </div>
+                  <div class="progress-bar"><div class="progress-fill pending" id="fill-pct-pending" style="width: 0%"></div></div>
+                </div>
+                <div class="stat-progress-row">
+                  <div class="label-info">
+                    <span>Overdue Tasks</span>
+                    <span id="pct-overdue">0%</span>
+                  </div>
+                  <div class="progress-bar"><div class="progress-fill overdue" id="fill-pct-overdue" style="width: 0%"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Grade Boundary & Final Exam Calculator -->
+            <div class="analytics-card double-width grade-calculator-card">
+              <h3>Grade Boundary Calculator</h3>
+              <p class="card-desc">Determine the required score on your final exam to reach your target IB grade.</p>
+              
+              <div class="calculator-container">
+                <div class="calculator-inputs">
+                  <div class="input-field-wrapper">
+                    <label for="calc-subject-select">Select Subject</label>
+                    <select id="calc-subject-select" class="calculator-select">
+                      <!-- Populated dynamically -->
+                    </select>
+                  </div>
+                  
+                  <div class="inputs-row">
+                    <div class="input-field-wrapper">
+                      <label for="calc-current-pct">Current Overall (%)</label>
+                      <input type="number" id="calc-current-pct" min="0" max="100" step="0.1" value="75">
+                    </div>
+                    <div class="input-field-wrapper">
+                      <label for="calc-acquired-weight">Coursework Weight Completed (%)</label>
+                      <input type="number" id="calc-acquired-weight" min="0" max="100" step="1" value="70">
+                    </div>
+                    <div class="input-field-wrapper">
+                      <label for="calc-exam-weight">Final Exam Weight (%)</label>
+                      <input type="number" id="calc-exam-weight" min="0" max="100" step="1" value="30">
+                    </div>
+                  </div>
+
+                  <div class="inputs-row">
+                    <div class="input-field-wrapper">
+                      <label for="calc-boundary-6">Boundary for Grade 6 (%)</label>
+                      <input type="number" id="calc-boundary-6" min="0" max="100" step="1" value="70">
+                    </div>
+                    <div class="input-field-wrapper">
+                      <label for="calc-boundary-7">Boundary for Grade 7 (%)</label>
+                      <input type="number" id="calc-boundary-7" min="0" max="100" step="1" value="85">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="calculator-divider"></div>
+
+                <div class="calculator-results">
+                  <div class="results-header">
+                    <h4>Calculated Targets</h4>
+                    <span class="recommended-badge" id="calc-recommended-badge">Target: Grade 7</span>
+                  </div>
+
+                  <div class="target-cards">
+                    <!-- Target 6 Card -->
+                    <div class="target-card" id="target-card-6">
+                      <div class="target-grade-header">
+                        <span class="target-grade-num">Grade 6</span>
+                        <span class="target-boundary-val" id="target-boundary-6-val">Boundary: 70%</span>
+                      </div>
+                      <div class="target-result-score" id="target-6-result">--</div>
+                      <div class="target-result-desc" id="target-6-desc">Required on Final Exam</div>
+                    </div>
+
+                    <!-- Target 7 Card -->
+                    <div class="target-card" id="target-card-7">
+                      <div class="target-grade-header">
+                        <span class="target-grade-num">Grade 7</span>
+                        <span class="target-boundary-val" id="target-boundary-7-val">Boundary: 85%</span>
+                      </div>
+                      <div class="target-result-score" id="target-7-result">--</div>
+                      <div class="target-result-desc" id="target-7-desc">Required on Final Exam</div>
+                    </div>
+                  </div>
+
+                  <!-- Formula step visualization -->
+                  <div class="formula-visualizer">
+                    <span class="formula-title">Calculation Details:</span>
+                    <div class="formula-math">
+                      <span class="formula-part font-display" id="formula-text">Required % = (Target % - Current % × Acquired Weight %) / Final Exam Weight %</span>
+                    </div>
+                    <div class="formula-calculation font-display" id="formula-math-details">
+                      --
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Tab 4: CAS Journal View -->
+        <section class="tab-content" id="tab-cas">
+          <div class="cas-layout">
+            <!-- Left Stats/Sync column -->
+            <div class="cas-left-panel">
+              <!-- Account card -->
+              <div class="cas-widget-card account-card">
+                <div class="widget-header">
+                  <h3>ManageBac CAS Session</h3>
+                  <span class="sync-status-indicator disconnected" id="mb-cas-status-badge">
+                    <span class="pulse-dot"></span>
+                    <span id="mb-cas-status-text">DISCONNECTED</span>
+                  </span>
+                </div>
+                <div class="widget-body">
+                  <div class="cas-account-info">
+                    <span class="user-name">Student Name</span>
+                    <span class="user-email">student@school.edu</span>
+                  </div>
+                  <div class="cas-sync-info-row">
+                    <span class="sync-lbl">Last synced:</span>
+                    <span class="sync-time-val" id="mb-cas-last-sync">Never</span>
+                  </div>
+                  <button class="cas-sync-btn" id="btn-cas-sync">
+                    <svg class="sync-icon" id="cas-sync-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                    </svg>
+                    <span>Sync CAS Data</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Stats overview card -->
+              <div class="cas-widget-card stats-card">
+                <div class="widget-header">
+                  <h3>CAS Overview</h3>
+                </div>
+                <div class="widget-body">
+                  <div class="stats-overview-row">
+                    <div class="overview-box">
+                      <span class="num-val" id="cas-total-journals">--</span>
+                      <span class="lbl-val">Reflections</span>
+                    </div>
+                    <div class="overview-box">
+                      <span class="num-val" id="cas-total-hours">--</span>
+                      <span class="lbl-val">Total Hours</span>
+                    </div>
+                  </div>
+                  
+                  <div class="divider"></div>
+                  
+                  <div class="cas-breakdown-list">
+                    <div class="cas-breakdown-row">
+                      <span class="cas-dot-indicator creativity">C</span>
+                      <span class="cas-cat-name">Creativity</span>
+                      <span class="cas-cat-hours" id="cas-c-hours">-- hrs</span>
+                      <span class="cas-cat-count" id="cas-c-journals">-- ref</span>
+                    </div>
+                    <div class="cas-breakdown-row">
+                      <span class="cas-dot-indicator activity">A</span>
+                      <span class="cas-cat-name">Activity</span>
+                      <span class="cas-cat-hours" id="cas-a-hours">-- hrs</span>
+                      <span class="cas-cat-count" id="cas-a-journals">-- ref</span>
+                    </div>
+                    <div class="cas-breakdown-row">
+                      <span class="cas-dot-indicator service">S</span>
+                      <span class="cas-cat-name">Service</span>
+                      <span class="cas-cat-hours" id="cas-s-hours">-- hrs</span>
+                      <span class="cas-cat-count" id="cas-s-journals">-- ref</span>
+                    </div>
+                  </div>
+                  
+                  <div class="divider"></div>
+                  
+                  <!-- Semesters split -->
+                  <h4>Semester Split</h4>
+                  <div class="cas-semesters-list" id="cas-semesters-split">
+                    <div class="empty-state-msg">Sync to load semesters.</div>
+                  </div>
+                  
+                  <div class="divider"></div>
+                  
+                  <!-- Evidence type counter -->
+                  <h4>Evidence Type Counter</h4>
+                  <div class="cas-types-grid">
+                    <div class="type-badge">📝 Journal: <span id="val-cnt-journal">0</span></div>
+                    <div class="type-badge">📁 File: <span id="val-cnt-file">0</span></div>
+                    <div class="type-badge">🎥 Video: <span id="val-cnt-video">0</span></div>
+                    <div class="type-badge">🔗 Website: <span id="val-cnt-website">0</span></div>
+                    <div class="type-badge">🖼️ Photos: <span id="val-cnt-photos">0</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Batch queue card -->
+              <div class="cas-widget-card queue-card">
+                <div class="widget-header">
+                  <h3>Batch Upload Queue</h3>
+                  <span class="q-badge" id="cas-queue-count">0 items</span>
+                </div>
+                <div class="widget-body">
+                  <div class="cas-queue-list-container" id="cas-queue-list">
+                    <div class="empty-state-msg">No pending uploads. Add items in the Upload form.</div>
+                  </div>
+                  <button class="cas-sync-btn start-q-btn" id="btn-cas-start-queue" style="display: none;">Start Upload Queue</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Workspace panel (form / gallery tabs) -->
+            <div class="cas-right-panel">
+              <div class="cas-tabs-header">
+                <button class="cas-tab-btn active" id="btn-cas-tab-upload">📤 Add Reflections & Evidence</button>
+                <button class="cas-tab-btn" id="btn-cas-tab-gallery">🖼️ Media & Evidence Gallery</button>
+              </div>
+              <div class="cas-tabs-content">
+                <!-- TAB 1: UPLOAD FORM -->
+                <div class="cas-sub-tab active" id="cas-tab-content-upload">
+                  <div class="cas-form-grid">
+                    <div class="cas-form-group">
+                      <label for="cas-input-exp">Select CAS Experience</label>
+                      <select id="cas-input-exp" class="cas-input-field">
+                        <option value="">-- Select an Experience --</option>
+                      </select>
+                    </div>
+
+                    <div class="cas-form-group">
+                      <label>Select Evidence Type</label>
+                      <div class="cas-tiles-row">
+                        <div class="cas-tile active" data-type="JournalEvidence">
+                          <span class="tile-icon">📝</span>
+                          <span>Journal</span>
+                        </div>
+                        <div class="cas-tile" data-type="FileEvidence">
+                          <span class="tile-icon">📁</span>
+                          <span>File</span>
+                        </div>
+                        <div class="cas-tile" data-type="YoutubeEvidence">
+                          <span class="tile-icon">🎥</span>
+                          <span>Video</span>
+                        </div>
+                        <div class="cas-tile" data-type="WebsiteEvidence">
+                          <span class="tile-icon">🔗</span>
+                          <span>Website</span>
+                        </div>
+                        <div class="cas-tile" data-type="AlbumEvidence">
+                          <span class="tile-icon">🖼️</span>
+                          <span>Photos</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Dynamic Link -->
+                    <div class="cas-form-group" id="cas-group-url" style="display: none;">
+                      <label for="cas-input-url" id="cas-lbl-url">URL Link</label>
+                      <input type="url" id="cas-input-url" class="cas-input-field" placeholder="https://...">
+                    </div>
+
+                    <!-- Dynamic File dropzone -->
+                    <div class="cas-form-group" id="cas-group-file" style="display: none;">
+                      <label for="cas-input-file" id="cas-lbl-file">Attach Files</label>
+                      <div class="cas-file-dropzone" id="cas-dropzone">
+                        <input type="file" id="cas-input-file" multiple style="display: none;">
+                        <span class="drop-icon">📤</span>
+                        <span class="drop-msg">Click to browse or drag & drop files here</span>
+                        <span class="drop-sub" id="cas-drop-subtext">Supports PDF, DOCX, ZIP, etc.</span>
+                      </div>
+                      <div class="cas-selected-files" id="cas-selected-files-list"></div>
+                    </div>
+
+                    <!-- Reflection Body -->
+                    <div class="cas-form-group">
+                      <label for="cas-input-body">Reflection / Journal Text</label>
+                      <textarea id="cas-input-body" class="cas-input-field textarea-field" rows="8" placeholder="Type your reflection text here..."></textarea>
+                    </div>
+
+                    <!-- Checked Learning Outcomes -->
+                    <div class="cas-form-group">
+                      <label>CAS Learning Outcomes</label>
+                      <div class="cas-outcomes-checkbox-grid" id="cas-outcomes-grid">
+                        <!-- Loaded dynamically -->
+                      </div>
+                    </div>
+
+                    <div class="cas-form-actions">
+                      <button class="cas-btn-secondary" id="btn-cas-queue-item">Queue for Batch</button>
+                      <button class="cas-btn-primary" id="btn-cas-upload-direct">Upload Immediately</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB 2: GALLERY -->
+                <div class="cas-sub-tab" id="cas-tab-content-gallery" style="display: none;">
+                  <div class="cas-gallery-header">
+                    <input type="text" id="cas-gallery-search" class="cas-input-field" placeholder="Search files / text...">
+                    <select id="cas-gallery-filter-exp" class="cas-input-field">
+                      <option value="">All Experiences</option>
+                    </select>
+                  </div>
+                  <div class="cas-gallery-grid" id="cas-gallery-container">
+                    <div class="empty-state-msg">Sync to load evidence gallery.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Task Detail Modal -->
+  <div class="modal-backdrop" id="task-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-subject" id="modal-task-subject">Subject</span>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h2 id="modal-task-title">Task Title</h2>
+        
+        <div class="modal-meta-grid">
+          <div class="meta-item">
+            <span class="meta-label">Deadline</span>
+            <span class="meta-val" id="modal-task-deadline">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Calendar Date</span>
+            <span class="meta-val" id="modal-task-date-header">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Status</span>
+            <span class="meta-val" id="modal-task-status">-</span>
+          </div>
+          <div class="meta-item" id="modal-task-score-container">
+            <span class="meta-label">Academic Score</span>
+            <div class="grade-badge" id="modal-task-score">-</div>
+          </div>
+        </div>
+
+        <div class="modal-badges" id="modal-task-badges">
+          <!-- Injected badges -->
+        </div>
+
+        <div class="modal-actions">
+          <a href="#" target="_blank" class="btn-primary" id="modal-task-link">
+            Open in ManageBac
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+              <polyline points="15 3 21 3 21 9"/>
+              <line x1="10" y1="14" x2="21" y2="3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Lightbox Viewer Modal -->
+  <div id="lightbox-modal" class="lightbox-modal" style="display: none;">
+    <span class="lightbox-close" id="lightbox-close-btn">&times;</span>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="View Large">
+    <div class="lightbox-caption" id="lightbox-caption"></div>
+  </div>
+
+  <!-- Hovering Due Tasks Radar Widget -->
+  <div id="due-radar-widget" class="due-radar-widget glass-panel">
+    <div class="due-radar-header">
+      <div class="header-title">
+        <span class="pulse-indicator red" id="due-radar-pulse"></span>
+        <h3>Due Radar</h3>
+      </div>
+      <div class="header-actions">
+        <button id="due-radar-settings-btn" class="icon-btn" title="Widget Settings">⚙️</button>
+        <button id="due-radar-close-btn" class="icon-btn" title="Hide widget">×</button>
+      </div>
+    </div>
+    
+    <div id="due-radar-settings" class="due-radar-settings-panel" style="display: none;">
+      <div class="settings-row">
+        <label for="due-radar-range-select">Show tasks due in:</label>
+        <select id="due-radar-range-select" class="radar-select">
+          <option value="2">2 Days</option>
+          <option value="3">3 Days</option>
+          <option value="5">5 Days</option>
+          <option value="7" selected>7 Days</option>
+          <option value="14">14 Days</option>
+          <option value="30">30 Days</option>
+        </select>
+      </div>
+      <div class="settings-row checkbox-row">
+        <input type="checkbox" id="due-radar-pref-show-overdue" checked>
+        <label for="due-radar-pref-show-overdue">Include Overdue Tasks</label>
+      </div>
+    </div>
+
+    <div class="due-radar-body">
+      <div id="due-radar-list" class="due-radar-list">
+        <!-- Injected dynamically by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating bubble trigger when widget is hidden -->
+  <button id="due-radar-trigger" class="due-radar-trigger glass-panel" style="display: none;">
+    <span class="trigger-icon">🔔</span>
+    <span class="trigger-badge" id="due-radar-badge">0</span>
+  </button>
+
+  <!-- Full-Screen Login Overlay -->
+  <div id="login-overlay" class="login-overlay active">
+    <div class="login-card glass-panel">
+      <div class="login-header">
+        <svg class="login-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+          <path d="M12 6v6l4 2"/>
+        </svg>
+        <h2>Manage<span>Task</span></h2>
+        <p>Sign in to your ManageBac account to sync your student dashboard.</p>
+      </div>
+      <form id="login-form">
+        <div class="input-group">
+          <label for="login-email">Email Address</label>
+          <input type="email" id="login-email" required placeholder="name@domain.com" autocomplete="email">
+        </div>
+        <div class="input-group">
+          <label for="login-password">Password / Passcode</label>
+          <input type="password" id="login-password" required placeholder="••••••••" autocomplete="current-password">
+        </div>
+        <div class="input-group">
+          <label for="login-subdomain">School Subdomain</label>
+          <div class="subdomain-input-wrapper">
+            <span class="subdomain-prefix">https://</span>
+            <input type="text" id="login-subdomain" required placeholder="sdgj.managebac.cn" value="sdgj.managebac.cn">
+          </div>
+        </div>
+        <div class="login-options">
+          <label class="checkbox-container">
+            <input type="checkbox" id="login-remember" checked>
+            <span class="checkmark"></span>
+            Remember Me
+          </label>
+        </div>
+        <div id="login-error" class="login-error-msg" style="display: none;"></div>
+        <button type="submit" id="login-submit-btn" class="login-btn">
+          <span class="btn-text">Sign In</span>
+          <span class="btn-spinner" style="display: none;"></span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js?v=2.0.2"></script>
+</body>
+</html>
