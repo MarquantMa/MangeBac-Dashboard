@@ -1,0 +1,7 @@
+# Runtime dependencies
+requests
+beautifulsoup4
+pywebview
+
+# Build/package dependency used by build_pywebview.py and generated builders
+pyinstaller
